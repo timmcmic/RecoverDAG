@@ -255,23 +255,24 @@ out-logfile -string "***********************************************************
 
 test-ExchangeManagementShell
 
+out-logfile -string "Obtaining the Active Directory Configuration Naming Context"
+
+$functionADConfigurationContext = get-ADConfigurationNamingContext
+
+out-logfile -string $functionADConfigurationContext 
+
+out-logfile -string "Construct the full Exchange container."
+
+$functionFullExchangeContainer = construct-FullExchangeContainer -servicesCN $functionServicesContainer -exchangeCN $functionExchangeContainer -configurationCN $functionADConfigurationContext 
+
+out-logfile -string $functionFullExchangeContainer 
+
 out-logfile -string "Proceed based on action selected.."
 out-logfile -string $operation
 
 if ($operation -eq $functionBackupOperation)
 {
     out-logfile -string "Entering backup procedure."
-    out-logfile -string "Obtaining the Active Directory Configuration Naming Context"
-
-    $functionADConfigurationContext = get-ADConfigurationNamingContext
-
-    out-logfile -string $functionADConfigurationContext 
-
-    out-logfile -string "Construct the full Exchange container."
-
-    $functionFullExchangeContainer = construct-FullExchangeContainer -servicesCN $functionServicesContainer -exchangeCN $functionExchangeContainer -configurationCN $functionADConfigurationContext 
-
-    out-logfile -string $functionFullExchangeContainer 
 }
 else 
 {
