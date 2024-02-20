@@ -567,6 +567,8 @@ Function restore-BackupInfo
 
     $functionDatabaseCopyMap = @()
     $functionDatabaseServers = @()
+    $functionServerHealthStatus = $null
+    $functionServerHealthErrors = @()
     $functionSortAttribute = "ActivationPreference"
     $functionServerAttribute = "MailboxServer"
 
@@ -606,7 +608,28 @@ Function restore-BackupInfo
 
     foreach ($server in $functionDatabaseServers)
     {
-        out-logfile -string $server
+        out-logfile -string $server.MailboxServer
+
+        out-logfile -string "Perform a test server health on all mailbox servers."
+
+        try {
+            $functionServerHealthStatus = test-ServiceHealth -server $server.MailboxServer -errorAction STOP
+        }
+        catch {
+            $functionServerHealthErrors += $server.MailboxServer
+        }
+    }
+
+    out-logfile -string "Review server health failures."
+
+    if ($functionServerHealthErrors.count -gt 0)
+    {
+        foreach ($server in $functionServerHealthErrors)
+        {
+            out-logfile -string ("Server health check failed on the following server: "+$server)
+            out-logfile -string "All members of the database availability group must be accessible."
+            exit
+        }
     }
 
     out-logfile -string "************************************************************************"
