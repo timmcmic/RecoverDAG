@@ -562,9 +562,7 @@ Function restore-BackupInfo
         [Parameter(Mandatory = $true)]
         $backupInfo,
         [Parameter(Mandatory = $true)]
-        $domainController,
-        [Parameter(Mandatory = $true)]
-        $mailboxServer
+        $domainController
     )
 
     $functionDatabaseCopyMap = @()
@@ -677,5 +675,5 @@ else
 
     out-logfile -string $functionBackupObject
 
-    restore-BackupInfo -backupInfo $functionBackupObject -domainController $domainController -mailboxServer $mailboxServer
+    restore-BackupInfo -backupInfo $functionBackupObject -domainController $domainController
 }
