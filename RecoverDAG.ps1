@@ -567,7 +567,7 @@ Function restore-BackupInfo
 
     $functionDatabaseCopyMap = @()
     $functionDatabaseServers = @()
-    $functionServerHealthStatus = $null
+    $functionServerHealthStatus = @()
     $functionServerHealthErrors = @()
     $functionSortAttribute = "ActivationPreference"
     $functionServerAttribute = "MailboxServer"
@@ -613,7 +613,7 @@ Function restore-BackupInfo
         out-logfile -string "Perform a test server health on all mailbox servers."
 
         try {
-            $functionServerHealthStatus = test-ServiceHealth -server $server.MailboxServer -errorAction STOP
+            $functionServerHealthStatus += test-ServiceHealth -server $server.MailboxServer -errorAction STOP
         }
         catch {
             $functionObject = New-Object PSObject -Property @{
@@ -644,7 +644,7 @@ Function restore-BackupInfo
     foreach ($server in $functionServerHealthStatus)
     {
         out-logfile -string $server
-        
+
         foreach ($entry in $server)
         {
             out-logfile -string $entry
