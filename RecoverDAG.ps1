@@ -580,7 +580,7 @@ if ($operation -eq $functionBackupOperation)
 
     $functionDagINFO = get-DAGInfo -dagName $dagName
 
-    
+    set-backupInfo -objectDN $functionActiveDirectoryBackupKeyCN -backupInfo $functionDagInfo
 }
 else 
 {
