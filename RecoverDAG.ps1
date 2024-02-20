@@ -413,6 +413,22 @@ Function get-DAGInfo
 
     out-logfile -string $functionServers
 
+    foreach ($server in $functionServers)
+    {
+        out-logfile -string ("Processing server: "+$server)
+
+        try {
+            $functionDatabaseCopyStatus += get-mailboxDatabaseCopyStatus -server $server -errorAction STOP
+        }
+        catch {
+            out-logfile -string "Unable to obtain database copy status for server."
+            out-logfile -string $_
+            exit
+        }
+
+        out-logfile -string $functionDatabaseCopyStatus
+    }
+
     <#
 
     try {
