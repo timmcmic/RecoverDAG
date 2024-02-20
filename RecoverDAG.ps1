@@ -523,7 +523,7 @@ Function set-BackupInfo
     out-logfile -string "************************************************************************"
 
     try {
-        Set-ADObject -identity $objectDN -clear 'msds-Settings' -server $domainController -errorAction STOP -server Azure-DC-0
+        Set-ADObject -identity $objectDN -clear 'msds-Settings' -server $domainController -errorAction STOP
     }
     catch {
         out-logfile -string "Error clearing previous backup properties."
@@ -538,7 +538,7 @@ Function set-BackupInfo
         out-logfile -string $functionJSON
 
         try{
-            set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP -server Azure-DC-0
+            set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP
         }
         catch {
             out-logfile -string "Unable to update backup information."
