@@ -546,7 +546,7 @@ if ($operation -eq $functionBackupOperation)
 
     out-logfile -string "Obtain the database copy information for the DAG and persist required information."
 
-    $functionDagINFO get-DAGInfo -dagName $dagName
+    $functionDagINFO = get-DAGInfo -dagName $dagName
 
     $functionDagInfo | Export-Clixml c:\temp\test.xml
 }
