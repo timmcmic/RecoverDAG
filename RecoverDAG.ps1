@@ -578,7 +578,7 @@ $functionFullExchangeContainer = construct-FullExchangeContainer -servicesCN $fu
 
 out-logfile -string $functionFullExchangeContainer 
 
-if (test-ADObject -objectDN $functionFullExchangeContainer)
+if (test-ADObject -objectDN $functionFullExchangeContainer -domainController $domainController)
 {
     out-logfile -string "Exchange container located successfully in directory - proceed."
 }
