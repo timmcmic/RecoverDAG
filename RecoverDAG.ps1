@@ -504,7 +504,7 @@ Function set-BackupInfo
     out-logfile -string $objectDN
 
     try {
-        Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP
+        Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP -server Azure-DC-0
     }
     catch {
         out-logfile -string "Error clearing previous backup properties."
