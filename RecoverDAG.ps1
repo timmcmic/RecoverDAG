@@ -516,7 +516,7 @@ Function set-BackupInfo
 
     $backupInfo[0]
 
-    set-adobject -Identity $objectDN -add @(msds-Settings=$backupinfo[0].tostring()) -errorAction STOP
+    set-adobject -Identity $objectDN -add @{'msds-Settings'=$backupinfo[0].tostring()} -errorAction STOP
 
     $functionXML
 
