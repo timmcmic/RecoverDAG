@@ -243,6 +243,37 @@ Function construct-FullExchangeContainer
 #=============================================================================================================
 #=============================================================================================================
 
+Function test-ADObject
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $objectDN
+    )
+
+    $functionTest = $false
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering test-ADObject"
+    out-logfile -string "************************************************************************"
+
+    if (get-adobject -identity $objectDN)
+    {
+        out-logfile -string "Directory object present by DN."
+        $functionTest = $TRUE
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting test-ADObject"
+    out-logfile -string "************************************************************************"
+
+    return $functionTest
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -267,8 +298,19 @@ $functionFullExchangeContainer = construct-FullExchangeContainer -servicesCN $fu
 
 out-logfile -string $functionFullExchangeContainer 
 
+if (test-ADObject -objectDN $functionFullExchangeContainer)
+{
+    out-logfile -string "Exchange container located successfully in directory - proceed."
+}
+else 
+{
+    out-logfile -string "Exchange container required to be present in Active Directory and not found." -isError:$true
+}
+
 out-logfile -string "Proceed based on action selected.."
 out-logfile -string $operation
+
+
 
 if ($operation -eq $functionBackupOperation)
 {
