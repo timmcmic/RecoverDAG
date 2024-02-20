@@ -319,7 +319,9 @@ Function create-BackupObject
     Param
     (
         [Parameter(Mandatory = $true)]
-        $objectDN
+        $objectName,
+        [Parameter(Mandatory = $true)]
+        $objectDN,
     )
 
     $functionObjectType = "msDS-App-Configuration"
@@ -330,7 +332,7 @@ Function create-BackupObject
     out-logfile -string "************************************************************************"
 
     try {
-        new-ADObject -identity $objectDN -type $functionObjectType -errorAction STOP
+        new-ADObject -Name $objectName -path $objectDN -type $functionObjectType -errorAction STOP
     }
     catch {
         out-logfile -string "Unable to create backup object in Active Directory."
@@ -395,7 +397,7 @@ if ($operation -eq $functionBackupOperation)
     else {
         out-logfile -string "Backup key does not already exist - create."
 
-        create-BackupObject -objectDN $functionActiveDirectoryBackupKeyCN
+        create-BackupObject -objectDN $functionFullExchangeContainer -objectName $functionActiveDirectoryBackupKey
     }
 
     out-logfile -string "Obtain the backup object."
