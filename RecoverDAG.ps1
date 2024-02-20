@@ -574,6 +574,10 @@ Function restore-BackupInfo
     foreach ($entry in $backupInfo.'msds-Settings')
     {
         out-logfile -string $entry
+
+        $entry = ConvertFrom-Json -InputObject $entry
+
+        out-logfile $entry
     }
 
     out-logfile -string "************************************************************************"
