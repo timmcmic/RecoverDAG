@@ -58,6 +58,7 @@ $functionFullExchangeContainer = ""
 $functionActiveDirectoryBackupKey = $DAGName + "-Backup"
 $functionActiveDirectoryBackupKeyCN = ""
 $functionBackupObject = ""
+$functionDagInfo = $null
 
 #=============================================================================================================
 #=============================================================================================================
@@ -469,71 +470,9 @@ Function get-DAGInfo
         }
     
         out-logfile -string $functionObject
+
+        $functionReturn += $functionObject
     }
-
-    
-    <#
-
-    try {
-        $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -errorAction STOP).servers
-
-        out-logfile -string $functionServers
-
-        foreach ($server in $FunctionServers)
-        {
-            out-logfile -string ("Processing server: "+$server)
-            try {
-                $functionDatabaseCopyStatus += get-mailboxDatabaseCopyStatus -server $server -errorAction STOP
-            }
-            catch {
-                out-logfile -string "Unable to obtain database copy status for server."
-                out-logfile -string $_
-                exit
-            }
-
-            out-logfile -string $functionDatabaseCopyStatus
-        }
-
-        out-logfile -string "Create objects to persist backup information to Active Directory."
-
-        foreach ($database in $functionDatabaseCopyStatus)
-        {
-            $functionReplayStatus = $database.ReplayLagStatus.split(";")
-            out-logfile -string $functionReplayStatus
-
-            foreach ($status in $replayStatus)
-            {
-                out-logfile -string $status
-                if ($status.contains($functionReplay))
-                {
-                    $functionReplayTimeValue = $status
-                    out-logfile -string $functionReplayTimeValue
-                }
-                elseif ($stats.contains($functionMaxTime))
-                {
-                    $functionMaxTimeValue = $status
-                    out-logfile -string $functionMaxTimeValue
-                }
-            }
-
-            $functionObject = New-Object PSObject -Property @{
-                Identity = $database.Identity
-                MailboxServer = $database.MailboxServer
-                ActivationPreference = $database.ActivationPreference
-                ReplayLagTime = $functionReplayTimeValue
-                MaxLagTime = $functionMaxTimeValue
-            }
-
-            out-logfile -string $functionObject
-        }
-    }
-    catch {
-        out-logfile -string "Uanble to obtain database availability group servers."
-        out-logfile -string $_
-        exit
-    }
-
-    #>
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting get-DAGInfo"
@@ -607,7 +546,9 @@ if ($operation -eq $functionBackupOperation)
 
     out-logfile -string "Obtain the database copy information for the DAG and persist required information."
 
-    get-DAGInfo -dagName $dagName
+    $functionDagINFO get-DAGInfo -dagName $dagName
+
+    $functionDagInfo | Export-Clixml c:\temp\test.xml
 }
 else 
 {
