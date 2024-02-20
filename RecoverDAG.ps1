@@ -512,10 +512,16 @@ Function set-BackupInfo
         exit
     }
 
-    $functionXML = ConvertTo-Xml $backupInfo -NoTypeInformation
-    $functionXML
-
-    set-adobject -Identity $objectDN -add @{'msds-Settings'=$functionXML.xml} -errorAction STOP -server Azure-DC-0
+    foreach ($database in $backupInfo)
+    {
+        try{
+            set-adobject -identity $objectDN -add @{'msds-settings'=$database.tostring()} -errorAction STOP -server Azure-DC-0
+        }
+        catch {
+            out-logfile -string "Unable to update backup information."
+            out-logfile -string $_
+        }
+    }
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting set-BackupInfo"
