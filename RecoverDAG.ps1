@@ -578,7 +578,11 @@ Function restore-BackupInfo
         $entry = ConvertFrom-Json -InputObject $entry
 
         out-logfile $entry
+
+        $functionDatabaseCopyMap += $entry
     }
+
+    $functionDatabaseCopyMap | Export-Clixml c:\temp\test.xml
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
