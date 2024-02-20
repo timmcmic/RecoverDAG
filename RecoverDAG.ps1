@@ -566,7 +566,9 @@ Function restore-BackupInfo
     )
 
     $functionDatabaseCopyMap = @()
+    $functionDatabaseServers = @()
     $functionSortAttribute = "ActivationPreference"
+    $functionServerAttribute = "MailboxServer"
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering restore-BackupInfo"
@@ -587,11 +589,22 @@ Function restore-BackupInfo
 
     #Sort the objects by activation preference.
 
+    out-logfile -string "Sort all databases by activation preference."
+
     $functionDatabaseCopyMap = $functionDatabaseCopyMap | Sort-Object $functionSortAttribute
 
     foreach ($database in $functionDatabaseCopyMap)
     {
         out-logfile -string $database
+    }
+
+    out-logfile -string "Extract unique mailbox servers from backup."
+
+    $functionDatabaseServers | Select-Object $functionServerAttribute -Unique
+
+    foreach ($server in $functionDatabaseServers)
+    {
+        out-logfile -string $server.MailboxServer
     }
 
     out-logfile -string "************************************************************************"
