@@ -51,6 +51,7 @@ Param
 
 $functionBackupOperation = "Backup"
 $functionRestoreOperation = "Restore"
+$functionADConfigurationContext = ""
 
 #=============================================================================================================
 #=============================================================================================================
@@ -177,6 +178,34 @@ Function test-ExchangeManagementShell
 #=============================================================================================================
 #=============================================================================================================
 
+Function get-ADConfigurationNamingContext
+{ 
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering get-ADConfigurationNamingContext"
+    out-logfile -string "************************************************************************"
+
+    $functionADConfigurationContext = $null
+
+    try {
+        out-logfile -string "Obtain configuraiton namging context..."
+        $functionADConfigurationContext = (Get-ADRootDSE).configurationNamingContext -errorAction STOP
+        out-logfile -string $functionADConfigurationContext
+    }
+    catch {
+        out-logfile -string $_
+        out-logfile -string "Unable to obtain configuration naming context." -isError:$TRUE
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "get-ADConfigurationNamingContext"
+    out-logfile -string "************************************************************************"
+
+    return $functionADConfigurationContext
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -195,6 +224,11 @@ out-logfile -string $operation
 if ($operation -eq $functionBackupOperation)
 {
     out-logfile -string "Entering backup procedure."
+    out-logfile -string "Obtaining the Active Directory Configuration Naming Context"
+
+    $functionADConfigurationContext = get-ADConfigurationNamingContext
+
+    out-logfile -string $functionADConfigurationContext 
 }
 else 
 {
