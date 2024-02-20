@@ -651,7 +651,10 @@ Function restore-BackupInfo
 
     $functionServerHealthErrors = @()
 
-    out-logfile -string $functionServerHealthStatus
+    foreach ($object in $functionServerHealthStatusObjects)
+    {
+        out-logfile -string $object.mailboxServer
+    }
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
