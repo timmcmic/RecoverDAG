@@ -429,6 +429,14 @@ Function get-DAGInfo
         out-logfile -string $functionDatabaseCopyStatus
     }
 
+    out-logfile -string "Create objects to persist backup information to Active Directory."
+
+    foreach ($database in $functionDatabaseCopyStatus)
+    {
+        $functionReplayStatus = $database.ReplayLagStatus.split(";")
+        out-logfile -string $functionReplayStatus
+    }
+
     <#
 
     try {
