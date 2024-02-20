@@ -297,7 +297,7 @@ Function return-ADObject
     out-logfile -string "************************************************************************"
 
     try {
-        $functionReturn = get-abobject -identity $objectDN -errorAction STOP
+        $functionReturn = get-adobject -identity $objectDN -errorAction STOP
     }
     catch {
         out-logfile -string "AD Object not located by DN."
