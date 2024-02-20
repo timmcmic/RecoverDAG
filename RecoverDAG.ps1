@@ -631,5 +631,13 @@ else
 
     #Test for the presence of the backup key.  If this is not present this is a hard failure.
 
-
+    if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController)
+    {
+        out-logfile -string "The backup key exits for this DAG in Active Directory."
+    }
+    else 
+    {
+        out-logfile -string "Restoration is not possible - the backup key cannot be located in Active Directory."
+        exit
+    }
 }
