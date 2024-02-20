@@ -803,7 +803,7 @@ Function clear-BackupInfo
     out-logfile -string "************************************************************************"
 
     try {
-        remove-adObject -identity $objectDN -server $domainController -errorAction STOP
+        remove-adObject -identity $objectDN -server $domainController -Confirm:$FALSE -errorAction STOP
     }
     catch {
         out-logfile -string "Unable to remove the backup key from Active Directory for this DAG Backup."
