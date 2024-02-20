@@ -47,12 +47,13 @@ Param
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
         [Parameter(Mandatory = $true)]
-        [ValidateSet("Backup","Restore")]
+        [ValidateSet("Backup","Restore","Clear")]
         [string]$operation
     )
 
 $functionBackupOperation = "Backup"
 $functionRestoreOperation = "Restore"
+$functionClearOperation = "Clear"
 $functionADConfigurationContext = ""
 $functionServicesContainer = "CN=Services"
 $functionExchangeContainer = "CN=Microsoft Exchange"
@@ -786,6 +787,37 @@ Function restore-BackupInfo
 #=============================================================================================================
 #=============================================================================================================
 
+Function clear-BackupInfo
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $objectDN,
+        [Parameter(Mandatory = $true)]
+        $domainController
+    )
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering clear-BackupInfo"
+    out-logfile -string "************************************************************************"
+
+    try {
+        remove-adObject -identity $objectDN -server $domainController -errorAction STOP
+    }
+    catch {
+        out-logfile -string "Unable to remove the backup key from Active Directory for this DAG Backup."
+        exit
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting clear-BackupInfo"
+    out-logfile -string "************************************************************************"
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -855,7 +887,7 @@ if ($operation -eq $functionBackupOperation)
 
     set-backupInfo -objectDN $functionActiveDirectoryBackupKeyCN -backupInfo $functionDagInfo -domainController $domainController
 }
-else 
+elseif ($operation -eq $functionRestoreOperation) 
 {
     out-logfile -string "Entering restore procedure"
 
@@ -878,4 +910,14 @@ else
     out-logfile -string $functionBackupObject
 
     restore-BackupInfo -backupInfo $functionBackupObject -domainController $domainController
+}
+elseif ($operation -eq $functionClearOperation)
+{
+    out-logfile -string "Entering clear process."
+
+    clear-BackupInfo -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController
+}
+else 
+{
+    Out-logfile -string "You should have never gotten here since paramter operations are scoped and mandatory."
 }
