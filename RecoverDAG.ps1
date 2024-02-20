@@ -151,7 +151,6 @@ Function test-ExchangeManagementShell
 {
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering test-ExchangeMangaementShell"
-
     out-logfile -string "************************************************************************"
 
     $functionISEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
@@ -184,7 +183,5 @@ new-logfile -logFileName $dagName -logFolderPath $logFolderPath
 out-logfile -string "************************************************************************"
 out-logfile -string "Entering Recover DAG"
 out-logfile -string "************************************************************************"
-
-out-logfile -string "Determine if the Exchange Mangaement Shell is being utilized."
 
 test-ExchangeManagementShell
