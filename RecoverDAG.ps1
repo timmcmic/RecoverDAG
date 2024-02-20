@@ -201,6 +201,7 @@ Function get-ADConfigurationNamingContext
     catch {
         out-logfile -string $_
         out-logfile -string "Unable to obtain configuration naming context." -isError:$TRUE
+        exit
     }
 
     out-logfile -string "************************************************************************"
@@ -337,7 +338,8 @@ Function create-BackupObject
     }
     catch {
         out-logfile -string "Unable to create backup object in Active Directory."
-        out-logfile -string $_ -isError:$TRUE
+        out-logfile -string $_ 
+        exit
     }
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting create-BackupObject"
