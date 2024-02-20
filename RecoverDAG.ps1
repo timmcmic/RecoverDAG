@@ -157,7 +157,7 @@ Function test-ExchangeManagementShell
 
     
 
-    $functionISEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
+    $isEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
 
     <#
 
