@@ -158,7 +158,6 @@ Function test-ExchangeManagementShell
 
     out-logfile -string ("Exchange Management Shell: "+$functionISEMS)
 
-
     if ($functionISEMS -eq $TRUE)
     {
         out-logfile -string "Exchange Management Shell in use..."
