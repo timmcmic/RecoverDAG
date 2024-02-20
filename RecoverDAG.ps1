@@ -154,13 +154,18 @@ Function test-ExchangeManagementShell
 
     out-logfile -string "************************************************************************"
 
-    if (get-EXCommand)
+    $functionISEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
+
+    out-logfile -string ("Exchange Management Shell: "+$functionISEMS)
+
+
+    if ($functionISEMS -eq $TRUE)
     {
-        out-logfile -string "Exchange online commands detected."
+        out-logfile -string "Exchange Management Shell in use..."
     }
-    else 
+    Else
     {
-        out-logfile -string "This script must be run from the Exchange Management Shell."
+        out-logfile -string "This script must be run from the Exchange Management Shell." -isError:$TRUE
     }
 
     out-logfile -string "************************************************************************"
