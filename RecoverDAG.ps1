@@ -154,14 +154,13 @@ Function test-ExchangeManagementShell
 
     out-logfile -string "************************************************************************"
 
-    try {
-        out-logfile -string "Testing for EX Commands."        
-        get-EXCommand -errorAction STOP
-        out-logfile -string "EX Commands located."
+    if (get-EXCommand)
+    {
+        out-logfile -string "Exchange online commands detected."
     }
-    catch {
-        out-logfile -string "This script requires execution in the Exchange Management Shell."
-        out-logfile -string $_ -isError:$true
+    else 
+    {
+        out-logfile -string "This script must be run from the Exchange Management Shell."
     }
 
     out-logfile -string "************************************************************************"
