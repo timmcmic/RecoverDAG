@@ -515,6 +515,9 @@ Function set-BackupInfo
     foreach ($database in $backupInfo)
     {
         $info = ConvertTo-Csv $database -NoTypeInformation
+        $info = $info.ToString()
+        $info
+        
         try{
             set-adobject -identity $objectDN -add @{'msds-settings'=$info} -errorAction STOP -server Azure-DC-0
         }
