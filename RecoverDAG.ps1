@@ -641,15 +641,7 @@ Function restore-BackupInfo
 
     $functionServerHealthErrors = @()
 
-    foreach ($server in $functionServerHealthStatus)
-    {
-        out-logfile -string $server
-
-        foreach ($entry in $server)
-        {
-            out-logfile -string $entry
-        }
-    }
+    out-logfile -string $functionServerHealthStatus
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
