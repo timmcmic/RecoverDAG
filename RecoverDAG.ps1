@@ -155,9 +155,7 @@ Function test-ExchangeManagementShell
     out-logfile -string "Entering test-ExchangeMangaementShell"
     out-logfile -string "************************************************************************"
 
-    $isEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
-
-    <#
+    $functionISEMS = [bool] (Get-Command -eq Ignore Get-ExCommand)
 
     out-logfile -string ("Exchange Management Shell: "+$functionISEMS)
 
@@ -173,7 +171,6 @@ Function test-ExchangeManagementShell
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting test-ExchangeMangaementShell"
     out-logfile -string "************************************************************************"
-    #>
 }
 
 
