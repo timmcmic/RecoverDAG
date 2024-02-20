@@ -49,8 +49,8 @@ Param
         [string]$operation
     )
 
-    $functionBackupOperation = "Backup"
-    $functionRestoreOperation = "Restore"
+$functionBackupOperation = "Backup"
+$functionRestoreOperation = "Restore"
 
 #=============================================================================================================
 #=============================================================================================================
@@ -180,8 +180,6 @@ new-logfile -logFileName $dagName -logFolderPath $logFolderPath
 
 #Start logging...
 
-out-logfile -string "************************************************************************"
-out-logfile -string "Entering Recover DAG"
-out-logfile -string "************************************************************************"
+
 
 test-ExchangeManagementShell
