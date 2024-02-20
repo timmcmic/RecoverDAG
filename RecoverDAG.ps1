@@ -654,6 +654,13 @@ Function restore-BackupInfo
     foreach ($object in $functionServerHealthStatusObjects)
     {
         out-logfile -string $object.mailboxServer
+
+        foreach ($entry in $functionServerHealthStatusObjects.HealthStatus)
+        {
+            out-logfile -string $entry.role
+            out-logfile -string $entry.RequiredServicesRunning
+            out-logfile -string $entry.ServicesNotRunning
+        }
     }
 
     out-logfile -string "************************************************************************"
