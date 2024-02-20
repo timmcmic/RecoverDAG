@@ -571,8 +571,10 @@ Function restore-BackupInfo
     out-logfile -string "Entering restore-BackupInfo"
     out-logfile -string "************************************************************************"
 
-    out-logfile -string $backupInfo
-    out-logfile -string $backupInfo.'msds-Settings'
+    foreach ($entry in $backupInfo.'msds-Settings')
+    {
+        out-logfile -string $entry
+    }
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
