@@ -437,6 +437,25 @@ Function get-DAGInfo
         out-logfile -string $functionReplayStatus
     }
 
+    foreach ($status in $functionReplayStatus)
+    {
+        out-logfile -string $status
+        if ($status.contains($functionReplay))
+        {
+            $functionReplayTimeValue = $status
+            out-logfile -string $functionReplayTimeValue
+        }
+        elseif ($stats.contains($functionMaxTime))
+        {
+            $functionMaxTimeValue = $status
+            out-logfile -string $functionMaxTimeValue
+        }
+        else 
+        {
+            out-logfile -string "Nothing to see here - move on..."
+        }
+    }
+
 
     <#
 
