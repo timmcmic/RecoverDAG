@@ -150,6 +150,7 @@ Function Out-LogFile
 
 Function test-ExchangeManagementShell
 {
+    #Code reuse attributed to: https://stackoverflow.com/questions/68441646/detect-in-script-whether-being-run-via-normal-powershell-window-or-exchange-man
  
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering test-ExchangeMangaementShell"
@@ -173,8 +174,6 @@ Function test-ExchangeManagementShell
     out-logfile -string "************************************************************************"
 }
 
-
-
 #=============================================================================================================
 #=============================================================================================================
 
@@ -189,3 +188,15 @@ out-logfile -string "Entering Recover DAG"
 out-logfile -string "************************************************************************"
 
 test-ExchangeManagementShell
+
+out-logfile -string "Proceed based on action selected.."
+out-logfile -string $operation
+
+if ($operation -eq $functionBackupOperation)
+{
+    out-logfile -string "Entering backup procedure."
+}
+else 
+{
+    out-logfile -string "Entering restore procedure"
+}
