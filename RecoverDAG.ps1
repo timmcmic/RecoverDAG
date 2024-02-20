@@ -602,9 +602,11 @@ Function restore-BackupInfo
 
     $functionDatabaseServers = $functionDatabaseCopyMap | Select-Object $functionServerAttribute -Unique
 
+    out-logfile -string "Perform a test service health to validate server is online..."
+
     foreach ($server in $functionDatabaseServers)
     {
-        out-logfile -string $server.MailboxServer
+        out-logfile -string $server
     }
 
     out-logfile -string "************************************************************************"
