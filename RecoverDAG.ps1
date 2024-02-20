@@ -391,7 +391,7 @@ Function get-DAGInfo
     $functionDatabaseCopyStatus = @()
     $functionServers = ""
     $functionReplay = "Configured"
-    $functionMaxTime = "MaxTime"
+    $functionMaxTime = "MaxDelay"
     $functionMaxTimeValue = $null
     $functionReplayTimeValue = $null
     $functionReplayStatus = $null
