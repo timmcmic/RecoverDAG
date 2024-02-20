@@ -202,5 +202,5 @@ function RecoverDAG
 
     out-logfile -string "Determine if the Exchange Mangaement Shell is being utilized."
 
-
+    test-ExchangeManagementShell
 }
