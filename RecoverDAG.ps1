@@ -726,7 +726,7 @@ Function restore-BackupInfo
     if ($functionDatabaseCopyErrors.count -gt 0)
     {
         out-logfile -string "Database copy errors were detected."
-        out-logfile -string "In order to proceed with restoration "
+        out-logfile -string "In order to proceed with restoration all database copies backed up must exist."
 
         foreach ($object in  $functionDatabaseCopyErrors)
         {
