@@ -55,7 +55,7 @@ $functionADConfigurationContext = ""
 $functionServicesContainer = "CN=Services"
 $functionExchangeContainer = "CN=Microsoft Exchange"
 $functionFullExchangeContainer = ""
-$functionActiveDirectoryBackupKey = "CN="+ $DAGName + "-Backup"
+$functionActiveDirectoryBackupKey = $DAGName + "-Backup"
 $functionActiveDirectoryBackupKeyCN = ""
 $functionBackupObject = ""
 
