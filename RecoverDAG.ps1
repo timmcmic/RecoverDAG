@@ -440,12 +440,13 @@ Function get-DAGInfo
     foreach ($status in $functionReplayStatus)
     {
         out-logfile -string $status
+
         if ($status.contains($functionReplay))
         {
             $functionReplayTimeValue = $status
             out-logfile -string $functionReplayTimeValue
         }
-        elseif ($stats.contains($functionMaxTime))
+        elseif ($status.contains($functionMaxTime))
         {
             $functionMaxTimeValue = $status
             out-logfile -string $functionMaxTimeValue
