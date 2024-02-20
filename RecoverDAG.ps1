@@ -643,7 +643,12 @@ Function restore-BackupInfo
 
     foreach ($server in $functionServerHealthStatus)
     {
+        out-logfile -string $server
         
+        foreach ($entry in $server)
+        {
+            out-logfile -string $entry
+        }
     }
 
     out-logfile -string "************************************************************************"
