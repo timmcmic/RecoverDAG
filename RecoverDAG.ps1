@@ -600,7 +600,7 @@ Function restore-BackupInfo
 
     out-logfile -string "Extract unique mailbox servers from backup."
 
-    $functionDatabaseServers | Select-Object $functionServerAttribute -Unique
+    $functionDatabaseServers = $functionDatabaseCopyMap | Select-Object $functionServerAttribute -Unique
 
     foreach ($server in $functionDatabaseServers)
     {
