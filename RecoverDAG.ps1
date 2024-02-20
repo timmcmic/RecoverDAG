@@ -502,7 +502,7 @@ Function set-BackupInfo
     out-logfile -string "************************************************************************"
 
     try {
-        Set-ADObject -identity $objectDN -replace @("msds-Settings"=$backupInfo) -errorAction STOP
+        Set-ADObject -identity $objectDN -replace @('msds-Settings'=$backupInfo) -errorAction STOP
     }
     catch {
         out-logfile -string "Error setting backup info on object."
