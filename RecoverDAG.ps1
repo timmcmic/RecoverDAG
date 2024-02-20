@@ -514,6 +514,8 @@ Function set-BackupInfo
 
     $functionXML = ConvertTo-Xml $backupInfo
 
+    set-adobject -Identity $objectDN -add @('msds-Settings'=$functionXML) -errorAction STOP
+
     $functionXML
 
     out-logfile -string "************************************************************************"
