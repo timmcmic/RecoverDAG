@@ -431,11 +431,7 @@ Function get-DAGInfo
 
     out-logfile -string "Create objects to persist backup information to Active Directory."
 
-    foreach ($database in $functionDatabaseCopyStatus)
-    {
-        $database | fl
-    }
-
+    $functionDatabaseCopyStatus | export-cliXML c:\temp\test.xml
     <#
 
     try {
