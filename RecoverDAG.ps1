@@ -536,6 +536,8 @@ Function set-BackupInfo
     {
         $functionJson = ConvertTo-Json -InputObject $database
         out-logfile -string $functionJSON
+        $functionJSON = $functionJSON.tostring()
+        out-logfile -string $functionJSON
 
         try{
             set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP
