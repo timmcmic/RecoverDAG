@@ -570,6 +570,7 @@ Function restore-BackupInfo
     $functionServerHealthStatus = $null
     $functionServerHealthStatusObjects = @()
     $functionServerHealthErrors = @()
+    $functionDatabaseCopyErrors = @()
     $functionSortAttribute = "ActivationPreference"
     $functionServerAttribute = "MailboxServer"
 
@@ -703,6 +704,40 @@ Function restore-BackupInfo
     else 
     {
         out-logfile -string "No individual service health issues present."
+    }
+
+    out-logfile -string "Validate that each mailbox database copy exists."
+
+    foreach ($database in $functionDatabaseCopyMap)
+    {
+        try {
+            Get-mailboxDatabaseCopyStatus -identity $database.identity -errorAction STOP
+        }
+        catch {
+            $functionObject = New-Object PSObject -Property @{
+                DatabaseCopy = $database.identity
+                Error = $_
+            }
+
+            $functionDatabaseCopyErrors += $functionObject
+        }
+    }
+
+    if ($functionDatabaseCopyErrors.count -gt 0)
+    {
+        out-logfile -string "Database copy errors were detected."
+        out-logfile -string "In order to proceed with restoration "
+
+        foreach ($object in  $functionDatabaseCopyErrors)
+        {
+            out-logfile -string ("Database Copy: "+$object.DatabaseCopy)
+            out-logfile -string ("Error: "+$object.Error)
+        }
+        exit
+    }
+    else 
+    {
+        out-logfile -string "All mailbox database copies accounted for."
     }
 
     out-logfile -string "************************************************************************"
