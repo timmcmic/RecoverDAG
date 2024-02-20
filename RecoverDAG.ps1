@@ -390,8 +390,8 @@ Function get-DAGInfo
     $functionReturn
     $functionDatabaseCopyStatus = @()
     $functionServers = ""
-    $functionReplay = "Configured"
-    $functionMaxTime = "MaxDelay"
+    $functionReplay = "Configured:"
+    $functionMaxTime = "MaxDelay:"
     $functionMaxTimeValue = $null
     $functionReplayTimeValue = $null
     $functionReplayStatus = $null
@@ -442,12 +442,12 @@ Function get-DAGInfo
 
             if ($status.contains($functionReplay))
             {
-                $functionReplayTimeValue = $status.trim()
+                $functionReplayTimeValue = ($status.replace($functionReplayName,"")).trim()
                 out-logfile -string $functionReplayTimeValue
             }
             elseif ($status.contains($functionMaxTime))
             {
-                $functionMaxTimeValue = $status.trim()
+                $functionMaxTimeValue = ($status.replace($functionMaxTime,"")).trim()
                 out-logfile -string $functionMaxTimeValue
             }
             else 
