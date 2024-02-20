@@ -1,28 +1,13 @@
-#############################################################################################
-# DISCLAIMER:																				#
-#																							#
-# THE SAMPLE SCRIPTS ARE NOT SUPPORTED UNDER ANY MICROSOFT STANDARD SUPPORT					#
-# PROGRAM OR SERVICE. THE SAMPLE SCRIPTS ARE PROVIDED AS IS WITHOUT WARRANTY				#
-# OF ANY KIND. MICROSOFT FURTHER DISCLAIMS ALL IMPLIED WARRANTIES INCLUDING, WITHOUT		#
-# LIMITATION, ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR OF FITNESS FOR A PARTICULAR		#
-# PURPOSE. THE ENTIRE RISK ARISING OUT OF THE USE OR PERFORMANCE OF THE SAMPLE SCRIPTS		#
-# AND DOCUMENTATION REMAINS WITH YOU. IN NO EVENT SHALL MICROSOFT, ITS AUTHORS, OR			#
-# ANYONE ELSE INVOLVED IN THE CREATION, PRODUCTION, OR DELIVERY OF THE SCRIPTS BE LIABLE	#
-# FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS	#
-# PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR OTHER PECUNIARY LOSS)	#
-# ARISING OUT OF THE USE OF OR INABILITY TO USE THE SAMPLE SCRIPTS OR DOCUMENTATION,		#
-# EVEN IF MICROSOFT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES						#
-#############################################################################################
 
 <#PSScriptInfo
 
 .VERSION 1.0
 
-.GUID 71f257a8-c758-4eb6-8e23-8714a35f290c
+.GUID fe16be3b-ae98-409e-900f-e2f4ec12860d
 
-.AUTHOR Timothy J. McMichael (aka timmcmic)
+.AUTHOR timmcmic
 
-.COMPANYNAME Microsoft Corporation
+.COMPANYNAME
 
 .COPYRIGHT
 
@@ -50,9 +35,22 @@
 <# 
 
 .DESCRIPTION 
- This script assists in automating the DAG recovery process. 
+ This script backs up and recovers database copy information 
 
 #> 
+Param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]$dagName,
+        [Parameter(Mandatory = $true)]
+        [string]$logFolderPath,
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("Backup","Restore")]
+        [string]$operation
+    )
+
+    $functionBackupOperation = "Backup"
+    $functionRestoreOperation = "Restore"
 
 #=============================================================================================================
 #=============================================================================================================
@@ -174,33 +172,16 @@ Function test-ExchangeManagementShell
 #=============================================================================================================
 #=============================================================================================================
 
-function RecoverDAG
-{
-    Param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]$dagName,
-        [Parameter(Mandatory = $true)]
-        [string]$logFolderPath,
-        [Parameter(Mandatory = $true)]
-        [ValidateSet("Backup","Restore")]
-        [string]$operation
-    )
+#Start the log file based on DAG name.
 
-    $functionBackupOperation = "Backup"
-    $functionRestoreOperation = "Restore"
+new-logfile -logFileName $dagName -logFolderPath $logFolderPath
 
-    #Start the log file based on DAG name.
+#Start logging...
 
-    new-logfile -logFileName $dagName -logFolderPath $logFolderPath
+out-logfile -string "************************************************************************"
+out-logfile -string "Entering Recover DAG"
+out-logfile -string "************************************************************************"
 
-    #Start logging...
+out-logfile -string "Determine if the Exchange Mangaement Shell is being utilized."
 
-    out-logfile -string "************************************************************************"
-    out-logfile -string "Entering Recover DAG"
-    out-logfile -string "************************************************************************"
-
-    out-logfile -string "Determine if the Exchange Mangaement Shell is being utilized."
-
-    test-ExchangeManagementShell
-}
+test-ExchangeManagementShell
