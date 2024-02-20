@@ -569,36 +569,15 @@ Function restore-BackupInfo
         $mailboxServer
     )
 
-    $functionDatabaseCopyMap = 
+    $functionDatabaseCopyMap = @()
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering restore-BackupInfo"
     out-logfile -string "************************************************************************"
 
-    try {
-        Set-ADObject -identity $objectDN -clear 'msds-Settings' -server $domainController -errorAction STOP
-    }
-    catch {
-        out-logfile -string "Error clearing previous backup properties."
-        out-logfile -string $_
-        exit
-    }
-
-
-    foreach ($database in $backupInfo)
+    foreach ($entry in $backupInfo.'msds-Settings')
     {
-        $functionJson = ConvertTo-Json -InputObject $database
-        out-logfile -string $functionJSON
-        $functionJSON = $functionJSON.tostring()
-        out-logfile -string $functionJSON
-
-        try{
-            set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP
-        }
-        catch {
-            out-logfile -string "Unable to update backup information."
-            out-logfile -string $_
-        }
+        out-logfile -string $entry
     }
 
     out-logfile -string "************************************************************************"
