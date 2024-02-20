@@ -188,7 +188,7 @@ Function get-ADConfigurationNamingContext
 
     try {
         out-logfile -string "Obtain configuraiton namging context..."
-        $functionADConfigurationContext = (Get-ADRootDSE).configurationNamingContext -errorAction STOP
+        $functionADConfigurationContext = (Get-ADRootDSE -errorAction STOP).configurationNamingContext 
         out-logfile -string $functionADConfigurationContext
     }
     catch {
