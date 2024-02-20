@@ -566,10 +566,13 @@ Function restore-BackupInfo
     )
 
     $functionDatabaseCopyMap = @()
+    $functionSortAttribute = "ActivationPreference"
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering restore-BackupInfo"
     out-logfile -string "************************************************************************"
+
+    #Convert the JSON entries from Active Directory back to functional PS objects.
 
     foreach ($entry in $backupInfo.'msds-Settings')
     {
@@ -582,7 +585,14 @@ Function restore-BackupInfo
         $functionDatabaseCopyMap += $entry
     }
 
-    $functionDatabaseCopyMap | Export-Clixml c:\temp\test.xml
+    #Sort the objects by activation preference.
+
+    $functionDatabaseCopyMap = $functionDatabaseCopyMap | Sort-Object $functionSortAttribute
+
+    foreach ($database in $functionDatabaseCopyMap)
+    {
+        out-logfile -string $database
+    }
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
