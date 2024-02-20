@@ -512,7 +512,7 @@ Function set-BackupInfo
         exit
     }
 
-    out-logfile -string $backupInfo[0]
+    out-logfile -string $backupInfo[0].tostring()
 
     foreach ($database in $backupInfo)
     {
