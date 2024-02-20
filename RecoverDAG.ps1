@@ -643,8 +643,11 @@ Function restore-BackupInfo
             out-logfile -string ("Server health check failed on the following server: "+$server.mailboxServer)
             out-logfile -string $server.Error
             out-logfile -string "All members of the database availability group must be accessible."
-            exit
         }
+        exit
+    }
+    else {
+        out-logfile -string "No server health issues detected this pass."
     }
 
     out-logfile -string "Review all service health status - fail if any services not ready."
@@ -679,6 +682,27 @@ Function restore-BackupInfo
                 out-logfile -string "Server is functional and ready."
             }
         }
+    }
+
+    out-logfile -string "Determine if service errors exist on servers."
+
+    if ($functionServerHealthErrors.count -gt 0)
+    {
+        out-logfile -string "Service health issues on servers exist."
+
+        foreach ($object in $functionServerHealthErrors)
+        {
+            out-logfile -string "The following issues are present:"
+            out-logfile -string $object.MailboxServer
+            out-logfile -string $object.role
+            out-logfile -string $object.RequiredServicesRunning
+            out-logfile -string $object.ServicesNotRunning
+        }
+        exit
+    }
+    else 
+    {
+        out-logfile -string "No individual service health issues present."
     }
 
     out-logfile -string "************************************************************************"
