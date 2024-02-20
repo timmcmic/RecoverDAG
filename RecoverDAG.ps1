@@ -484,6 +484,38 @@ Function get-DAGInfo
 #=============================================================================================================
 #=============================================================================================================
 
+Function set-BackupInfo
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $objectDN,
+        [Parameter(Mandatory = $true)]
+        $backupInfo
+    )
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering set-BackupInfo"
+    out-logfile -string "************************************************************************"
+
+    try {
+        Set-ADObject -identity $objectDN -replace @(msds-Settings=$backupInfo) -errorAction STOP
+    }
+    catch {
+        out-logfile -string "Error setting backup info on object."
+        out-logfile -string $_
+        exit
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting set-BackupInfo"
+    out-logfile -string "************************************************************************"
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -548,7 +580,7 @@ if ($operation -eq $functionBackupOperation)
 
     $functionDagINFO = get-DAGInfo -dagName $dagName
 
-    $functionDagInfo | Export-Clixml c:\temp\test.xml
+    
 }
 else 
 {
