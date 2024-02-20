@@ -616,6 +616,7 @@ Function restore-BackupInfo
             $functionServerHealthStatus = test-ServiceHealth -server $server.MailboxServer -errorAction STOP
         }
         catch {
+            out-logfile $_
             $functionServerHealthErrors += $server.MailboxServer
         }
     }
