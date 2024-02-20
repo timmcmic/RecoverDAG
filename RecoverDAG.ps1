@@ -43,8 +43,6 @@ Param
         [Parameter(Mandatory = $true)]
         [string]$dagName,
         [Parameter(Mandatory = $true)]
-        [string]$mailboxServer="",
-        [Parameter(Mandatory = $true)]
         [string]$domainController,
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
