@@ -150,10 +150,12 @@ Function Out-LogFile
 
 Function test-ExchangeManagementShell
 {
-    <#
+ 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering test-ExchangeMangaementShell"
     out-logfile -string "************************************************************************"
+
+    <#
 
     $functionISEMS = [bool] (Get-Command –eq Ignore Get-ExCommand)
 
