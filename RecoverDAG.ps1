@@ -513,7 +513,7 @@ Function set-BackupInfo
     foreach ($object in $backupInfo)
     {
         try {
-            set-adobject -identity $objectdn -add @('msds-Settings'=$object) -errorAction STOP
+            set-adobject -identity $objectdn -add @('msds-Settings'=$object.tostring()) -errorAction STOP
         }
         catch {
             out-logfile -string "Unable to persist backup information object."
