@@ -493,7 +493,7 @@ if ($operation -eq $functionBackupOperation)
 
     out-logfile -string "Obtain the database copy information for the DAG and persist required information."
 
-    get-DAGInfo
+    get-DAGInfo -dagName $dagName
 }
 else 
 {
