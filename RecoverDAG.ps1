@@ -55,6 +55,8 @@ $functionADConfigurationContext = ""
 $functionServicesContainer = "CN=Services"
 $functionExchangeContainer = "CN=Microsoft Exchange"
 $functionFullExchangeContainer = ""
+$functionActiveDirectoryBackupKey = "CN="+ $DAGName + "-Backup,"
+$functionActiveDirectoryBackupKeyCN = ""
 
 #=============================================================================================================
 #=============================================================================================================
@@ -310,11 +312,20 @@ else
 out-logfile -string "Proceed based on action selected.."
 out-logfile -string $operation
 
-
-
 if ($operation -eq $functionBackupOperation)
 {
     out-logfile -string "Entering backup procedure."
+    out-logfile -string "Determine if backup Active Directory Key exists."
+    out-logfile -string $functionActiveDirectoryBackupKey
+    $functionActiveDirectoryBackupKeyCN = $functionActiveDirectoryBackupKey + $functionFullExchangeContainer
+
+    if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
+    {
+        out-logfile -string "The backup key exits for this DAG in Active Directory."
+    }
+    else {
+        out-logfile -string "The backup key does not exist for this DAG in Active Directory - operation abort" -isError:$true
+    }
 }
 else 
 {
