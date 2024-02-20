@@ -365,7 +365,7 @@ Function construct-BackupKey
 
     $functionReturnCN = "CN="+$backupCN
     out-logfile -string $FunctionReturnCN
-    $functionReturnCN = $funciontReturnCN+","+$exchangeCN
+    $functionReturnCN = $functionReturnCN+","+$exchangeCN
     out-logfile -string $functionReturnCN
 
     out-logfile -string "************************************************************************"
