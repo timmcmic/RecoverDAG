@@ -322,6 +322,7 @@ if ($operation -eq $functionBackupOperation)
     out-logfile -string "Determine if backup Active Directory Key exists."
     out-logfile -string $functionActiveDirectoryBackupKey
     $functionActiveDirectoryBackupKeyCN = $functionActiveDirectoryBackupKey + $functionFullExchangeContainer
+    out-logfile -string $functionActiveDirectoryBackupKeyCN 
 
     if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
     {
