@@ -212,7 +212,7 @@ Function get-ADConfigurationNamingContext
 Function construct-FullExchangeContainer
 { 
     # Specifies a path to one or more locations. Wildcards are permitted.
-    Params
+    Param
     (
         [Parameter(Mandatory = $true)]
         $servicesCN,
