@@ -390,6 +390,10 @@ Function get-DAGInfo
     $functionReturn
     $functionDatabaseCopyStatus = ""
     $functionServers = ""
+    $functionReplay = "Configured"
+    $functionMaxTime = "MaxTime"
+    $functionMaxTimeValue = $null
+    $functionReplayTimeValue = $null
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering get-DAGInfo"
@@ -415,6 +419,37 @@ Function get-DAGInfo
             }
 
             out-logfile -string $functionDatabaseCopyStatus
+        }
+
+        out-logfile -string "Create objects to persist backup information to Active Directory."
+
+        foreach ($database in $functionDatabaseCopyStatus)
+        {
+            $replayStatus = $database.ReplayLagStatus.split(";")
+
+            foreach ($status in $replayStatus)
+            {
+                if ($status.contains($functionReplay))
+                {
+                    $functionReplayTimeValue = $status
+                    out-logfile -string $functionReplayTimeValue
+                }
+                elseif ($stats.contains($functionMaxTime))
+                {
+                    $functionMaxTimeValue = $status
+                    out-logfile -string $functionMaxTimeValue
+                }
+            }
+
+            $functionObject = New-Object PSObject -Property @{
+                Identity = $database.Identity
+                MailboxServer = $database.MailboxServer
+                ActivationPreference = $database.ActivationPreference
+                ReplayLagTime = $functionReplayTimeValue
+                MaxLagTime = $functionMaxTimeValue
+            }
+
+            out-logfile -string $functionObject
         }
     }
     catch {
