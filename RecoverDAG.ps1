@@ -501,6 +501,8 @@ Function set-BackupInfo
     out-logfile -string "Entering set-BackupInfo"
     out-logfile -string "************************************************************************"
 
+    out-logfile -string $objectDN
+
     try {
         Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP
     }
