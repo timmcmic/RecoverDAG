@@ -572,6 +572,7 @@ Function restore-BackupInfo
     out-logfile -string "************************************************************************"
 
     out-logfile -string $backupInfo
+    out-logfile -string $backupInfo.'msds-Settings'
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
