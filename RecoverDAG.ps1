@@ -265,6 +265,10 @@ Function test-ADObject
         out-logfile -string "Directory object present by DN."
         $functionTest = $TRUE
     }
+    else 
+    {
+        out-logfile -string "Objec is not present by DN."
+    }
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting test-ADObject"
