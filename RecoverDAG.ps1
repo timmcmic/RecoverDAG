@@ -413,6 +413,8 @@ Function get-DAGInfo
                 out-logfile -string $_
                 exit
             }
+
+            out-logfile -string $functionDatabaseCopyStatus
         }
     }
     catch {
