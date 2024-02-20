@@ -42,7 +42,7 @@ Param
     (
         [Parameter(Mandatory = $true)]
         [string]$dagName,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [string]$mailboxServer="",
         [Parameter(Mandatory = $true)]
         [string]$domainController,
@@ -646,4 +646,6 @@ else
     $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController
 
     out-logfile -string $functionBackupObject
+
+
 }
