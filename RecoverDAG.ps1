@@ -313,6 +313,37 @@ Function return-ADObject
 #=============================================================================================================
 #=============================================================================================================
 
+Function create-BackupObject
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $objectDN
+    )
+
+    $functionObjectType = "msDS-App-Configuration"
+
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering create-BackupObject"
+    out-logfile -string "************************************************************************"
+
+    try {
+        new-ADObject -identity $objectDN -type $functionObjectType -errorAction STOP
+    }
+    catch {
+        out-logfile -string "Unable to create backup object in Active Directory."
+        out-logfile -string $_ -isError:$TRUE
+    }
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting create-BackupObject"
+    out-logfile -string "************************************************************************"
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -360,16 +391,18 @@ if ($operation -eq $functionBackupOperation)
     if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
     {
         out-logfile -string "The backup key exits for this DAG in Active Directory."
-
-        out-logfile -string "Obtain the backup object."
-
-        $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN
-
-        out-logfile -string $functionBackupObject
     }
     else {
-        out-logfile -string "The backup key does not exist for this DAG in Active Directory - operation abort" -isError:$true
+        out-logfile -string "Backup key does not already exist - create."
+
+        create-BackupObject -objectDN $functionActiveDirectoryBackupKeyCN
     }
+
+    out-logfile -string "Obtain the backup object."
+
+    $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN
+
+    out-logfile -string $functionBackupObject
 }
 else 
 {
