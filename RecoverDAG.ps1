@@ -418,7 +418,7 @@ Function get-DAGInfo
         out-logfile -string ("Processing server: "+$server)
 
         try {
-            $functionDatabaseCopyStatus += get-mailboxDatabaseCopyStatus -server $server -errorAction STOP
+            $functionDatabaseCopyStatus += @(get-mailboxDatabaseCopyStatus -server $server -errorAction STOP)
         }
         catch {
             out-logfile -string "Unable to obtain database copy status for server."
@@ -431,7 +431,14 @@ Function get-DAGInfo
 
     out-logfile -string "Create objects to persist backup information to Active Directory."
 
-    $functionDatabaseCopyStatus | export-cliXML c:\temp\test.xml
+    foreach ($database in $functionDatabaseCopyStatus)
+    {
+        $functionReplayStatus = $database.ReplayLagStatus.split(";")
+        out-logfile -string $functionReplayStatus
+    }
+
+
+    
     <#
 
     try {
