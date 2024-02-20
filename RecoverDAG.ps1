@@ -301,7 +301,7 @@ Function return-ADObject
     }
     catch {
         out-logfile -string "AD Object not located by DN."
-        out-logfile -string $_ -isError:$TRUE
+        exit
     }
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting return-ADObject"
