@@ -400,7 +400,20 @@ Function get-DAGInfo
     out-logfile -string "Entering get-DAGInfo"
     out-logfile -string "************************************************************************"
 
-    out-logfile -string "Obtaining database copy stauts."
+    out-logfile -string "Obtaining database copy status."
+
+    try {
+        $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -errorAction STOP).servers
+    }
+    catch {
+        out-logfile -string "Uanble to obtain database availability group servers."
+        out-logfile -string $_
+        exit
+    }
+
+    out-logfile -string $functionServers
+
+    <#
 
     try {
         $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -errorAction STOP).servers
@@ -460,6 +473,8 @@ Function get-DAGInfo
         out-logfile -string $_
         exit
     }
+
+    #>
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting get-DAGInfo"
