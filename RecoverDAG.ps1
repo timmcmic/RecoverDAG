@@ -512,13 +512,11 @@ Function set-BackupInfo
         exit
     }
 
-    $test = ConvertTo-Csv $backupInfo[0] -NoTypeInformation
-    $test
-
     foreach ($database in $backupInfo)
     {
+        $info = ConvertTo-Csv $database -NoTypeInformation
         try{
-            set-adobject -identity $objectDN -add @{'msds-settings'=$database.tostring()} -errorAction STOP -server Azure-DC-0
+            set-adobject -identity $objectDN -add @{'msds-settings'=$info} -errorAction STOP -server Azure-DC-0
         }
         catch {
             out-logfile -string "Unable to update backup information."
