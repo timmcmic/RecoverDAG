@@ -433,9 +433,7 @@ Function get-DAGInfo
 
     foreach ($database in $functionDatabaseCopyStatus)
     {
-        $database.ReplayLagStatus
-        $functionReplayStatus = $database.ReplayLagStatus.split(";")
-        out-logfile -string $functionReplayStatus
+        $database | fl
     }
 
     <#
