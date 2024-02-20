@@ -660,6 +660,24 @@ Function restore-BackupInfo
             out-logfile -string $entry.role
             out-logfile -string $entry.RequiredServicesRunning
             out-logfile -string $entry.ServicesNotRunning
+
+            if ($entry.RequiredServicesRunning -eq $false)
+            {
+                out-logfile -string "Required services for role not available."
+
+                $functionObject = New-Object PSObject -Property @{
+                    MailboxServer = $object.mailboxServer
+                    Role = $entry.role
+                    RequiredServicesRunning = $entry.RequiredServicesRunning
+                    ServicesNotRunning = $entry.ServicesNotRunning
+                }
+
+                $functionServerHealthErrors += $functionObject
+            }
+            else 
+            {
+                out-logfile -string "Server is functional and ready."
+            }
         }
     }
 
