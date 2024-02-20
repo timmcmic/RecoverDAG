@@ -388,7 +388,7 @@ Function get-DAGInfo
         $dagName
     )
 
-    $functionReturn
+    $functionReturn =@()
     $functionDatabaseCopyStatus = @()
     $functionServers = ""
     $functionReplay = "Configured:"
