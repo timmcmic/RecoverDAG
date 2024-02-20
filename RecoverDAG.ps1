@@ -42,6 +42,10 @@ Param
     (
         [Parameter(Mandatory = $true)]
         [string]$dagName,
+        [Parameter(Mandatory = $false)]
+        [string]$mailboxServer,
+        [Parameter(Mandatory = $true)]
+        [string]$domainController,
         [Parameter(Mandatory = $true)]
         [string]$logFolderPath,
         [Parameter(Mandatory = $true)]
@@ -187,6 +191,11 @@ Function test-ExchangeManagementShell
 
 Function get-ADConfigurationNamingContext
 { 
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $domainController
+    )
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering get-ADConfigurationNamingContext"
     out-logfile -string "************************************************************************"
@@ -195,7 +204,7 @@ Function get-ADConfigurationNamingContext
 
     try {
         out-logfile -string "Obtain configuraiton namging context..."
-        $functionADConfigurationContext = (Get-ADRootDSE -errorAction STOP).configurationNamingContext 
+        $functionADConfigurationContext = (Get-ADRootDSE -server $domainController -errorAction STOP).configurationNamingContext 
         out-logfile -string $functionADConfigurationContext
     }
     catch {
@@ -254,7 +263,9 @@ Function test-ADObject
     Param
     (
         [Parameter(Mandatory = $true)]
-        $objectDN
+        $objectDN,
+        [Parameter(Mandatory = $true)]
+        $domainController
     )
 
     $functionTest = $false
@@ -263,7 +274,7 @@ Function test-ADObject
     out-logfile -string "Entering test-ADObject"
     out-logfile -string "************************************************************************"
 
-    if (get-adobject -identity $objectDN -ErrorAction SilentlyContinue)
+    if (get-adobject -identity $objectDN -server $domainController -ErrorAction SilentlyContinue)
     {
         out-logfile -string "Directory object present by DN."
         $functionTest = $TRUE
@@ -289,7 +300,9 @@ Function return-ADObject
     Param
     (
         [Parameter(Mandatory = $true)]
-        $objectDN
+        $objectDN,
+        [Parameter(Mandatory = $true)]
+        $domainController
     )
 
     $functionReturn = $null
@@ -299,7 +312,7 @@ Function return-ADObject
     out-logfile -string "************************************************************************"
 
     try {
-        $functionReturn = get-adobject -identity $objectDN -errorAction STOP
+        $functionReturn = get-adobject -identity $objectDN -server $domainController -errorAction STOP
     }
     catch {
         out-logfile -string "AD Object not located by DN."
@@ -323,7 +336,9 @@ Function create-BackupObject
         [Parameter(Mandatory = $true)]
         $objectName,
         [Parameter(Mandatory = $true)]
-        $objectDN
+        $objectDN,
+        [Parameter(Mandatory = $true)]
+        $domainController
     )
 
     $functionObjectType = "msDS-App-Configuration"
@@ -334,7 +349,7 @@ Function create-BackupObject
     out-logfile -string "************************************************************************"
 
     try {
-        new-ADObject -Name $objectName -path $objectDN -type $functionObjectType -errorAction STOP
+        new-ADObject -Name $objectName -path $objectDN -type $functionObjectType -server $domainController -errorAction STOP
     }
     catch {
         out-logfile -string "Unable to create backup object in Active Directory."
@@ -387,7 +402,9 @@ Function get-DAGInfo
     Param
     (
         [Parameter(Mandatory = $true)]
-        $dagName
+        $dagName,
+        [Parameter(Mandatory = $true)]
+        $domainController
     )
 
     $functionReturn =@()
@@ -406,7 +423,7 @@ Function get-DAGInfo
     out-logfile -string "Obtaining database copy status."
 
     try {
-        $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -errorAction STOP).servers
+        $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -domainController $domainController -errorAction STOP).servers
     }
     catch {
         out-logfile -string "Uanble to obtain database availability group servers."
@@ -421,7 +438,7 @@ Function get-DAGInfo
         out-logfile -string ("Processing server: "+$server)
 
         try {
-            $functionDatabaseCopyStatus += @(get-mailboxDatabaseCopyStatus -server $server -errorAction STOP)
+            $functionDatabaseCopyStatus += @(get-mailboxDatabaseCopyStatus -server $server -domainController $domainController -errorAction STOP)
         }
         catch {
             out-logfile -string "Unable to obtain database copy status for server."
@@ -494,17 +511,19 @@ Function set-BackupInfo
         [Parameter(Mandatory = $true)]
         $objectDN,
         [Parameter(Mandatory = $true)]
-        $backupInfo
+        $backupInfo,
+        [Parameter(Mandatory = $true)]
+        $domainController
     )
 
-    $functionXML = $NULL
+    $functionJSON = $NULL
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering set-BackupInfo"
     out-logfile -string "************************************************************************"
 
     try {
-        Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP -server Azure-DC-0
+        Set-ADObject -identity $objectDN -clear 'msds-Settings' -server $domainController -errorAction STOP -server Azure-DC-0
     }
     catch {
         out-logfile -string "Error clearing previous backup properties."
@@ -512,14 +531,14 @@ Function set-BackupInfo
         exit
     }
 
+
     foreach ($database in $backupInfo)
     {
-        $info = ConvertTo-Csv $database -NoTypeInformation
-        $info = $info.ToString()
-        $info
-        
+        $functionJson = ConvertTo-Json -InputObject $database
+        out-logfile -string $functionJSON
+
         try{
-            set-adobject -identity $objectDN -add @{'msds-settings'=$info} -errorAction STOP -server Azure-DC-0
+            set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP -server Azure-DC-0
         }
         catch {
             out-logfile -string "Unable to update backup information."
@@ -549,7 +568,7 @@ test-ExchangeManagementShell
 
 out-logfile -string "Obtaining the Active Directory Configuration Naming Context"
 
-$functionADConfigurationContext = get-ADConfigurationNamingContext
+$functionADConfigurationContext = get-ADConfigurationNamingContext -domainController $domainController
 
 out-logfile -string $functionADConfigurationContext 
 
@@ -579,27 +598,27 @@ if ($operation -eq $functionBackupOperation)
     $functionActiveDirectoryBackupKeyCN = construct-BackupKey -backupCN $functionActiveDirectoryBackupKey -exchangeCN $functionFullExchangeContainer
     out-logfile -string $functionActiveDirectoryBackupKeyCN 
 
-    if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
+    if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController)
     {
         out-logfile -string "The backup key exits for this DAG in Active Directory."
     }
     else {
         out-logfile -string "Backup key does not already exist - create."
 
-        create-BackupObject -objectDN $functionFullExchangeContainer -objectName $functionActiveDirectoryBackupKey
+        create-BackupObject -objectDN $functionFullExchangeContainer -objectName $functionActiveDirectoryBackupKey -domainController $domainController
     }
 
     out-logfile -string "Obtain the backup object."
 
-    $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN
+    $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController
 
     out-logfile -string $functionBackupObject
 
     out-logfile -string "Obtain the database copy information for the DAG and persist required information."
 
-    $functionDagINFO = get-DAGInfo -dagName $dagName
+    $functionDagINFO = get-DAGInfo -dagName $dagName -domainController $domainController
 
-    set-backupInfo -objectDN $functionActiveDirectoryBackupKeyCN -backupInfo $functionDagInfo
+    set-backupInfo -objectDN $functionActiveDirectoryBackupKeyCN -backupInfo $functionDagInfo -domainController $domainController
 }
 else 
 {
