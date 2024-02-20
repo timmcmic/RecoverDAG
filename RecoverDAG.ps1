@@ -497,6 +497,8 @@ Function set-BackupInfo
         $backupInfo
     )
 
+    $functionXML = $NULL
+
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering set-BackupInfo"
     out-logfile -string "************************************************************************"
@@ -510,17 +512,9 @@ Function set-BackupInfo
         exit
     }
 
-    foreach ($object in $backupInfo)
-    {
-        try {
-            set-adobject -identity $objectdn -add @('msds-Settings'=$object.tostring()) -errorAction STOP
-        }
-        catch {
-            out-logfile -string "Unable to persist backup information object."
-            out-logfile -string $_
-            exit
-        }
-    }
+    $functionXML = ConvertTo-Xml $backupInfo
+
+    $functionXML
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting set-BackupInfo"
