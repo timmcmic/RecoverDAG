@@ -693,10 +693,10 @@ Function restore-BackupInfo
         foreach ($object in $functionServerHealthErrors)
         {
             out-logfile -string "The following issues are present:"
-            out-logfile -string $object.MailboxServer
-            out-logfile -string $object.role
-            out-logfile -string $object.RequiredServicesRunning
-            out-logfile -string $object.ServicesNotRunning
+            out-logfile -string ("Mailbox Server: "+$object.MailboxServer)
+            out-logfile -string ("Role: "+$object.role)
+            out-logfile -string ("Required Services Running: "+$object.RequiredServicesRunning)
+            out-logfile -string ("Services Not Running: "+$object.ServicesNotRunning)
         }
         exit
     }
