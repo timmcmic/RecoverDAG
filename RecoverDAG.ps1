@@ -512,13 +512,9 @@ Function set-BackupInfo
         exit
     }
 
-    $functionXML = ConvertTo-Xml $backupInfo
+    $functionXML = ConvertTo-Xml -NoTypeInformation
 
-    $backupInfo[0]
-
-    set-adobject -Identity $objectDN -add @{'msds-Settings'=$backupinfo[0].tostring()} -errorAction STOP
-
-    $functionXML
+    set-adobject -Identity $objectDN -add @{'msds-Settings'=$functionXML} -errorAction STOP
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting set-BackupInfo"
