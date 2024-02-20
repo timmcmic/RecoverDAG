@@ -501,15 +501,25 @@ Function set-BackupInfo
     out-logfile -string "Entering set-BackupInfo"
     out-logfile -string "************************************************************************"
 
-    out-logfile -string $objectDN
-
     try {
-        Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP -server Azure-DC-0
+        Set-ADObject -identity $objectDN -clear 'msds-Settings' -errorAction STOP
     }
     catch {
         out-logfile -string "Error clearing previous backup properties."
         out-logfile -string $_
         exit
+    }
+
+    foreach ($object in $backupInfo)
+    {
+        try {
+            set-adobject -identity $objectdn -add @('msds-Settings'=$object) -errorAction STOP
+        }
+        catch {
+            out-logfile -string "Unable to persist backup information object."
+            out-logfile -string $_
+            exit
+        }
     }
 
     out-logfile -string "************************************************************************"
