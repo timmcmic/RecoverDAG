@@ -260,7 +260,7 @@ Function test-ADObject
     out-logfile -string "Entering test-ADObject"
     out-logfile -string "************************************************************************"
 
-    if (get-adobject -identity $objectDN)
+    if (get-adobject -identity $objectDN -ErrorAction SilentlyContinue)
     {
         out-logfile -string "Directory object present by DN."
         $functionTest = $TRUE
