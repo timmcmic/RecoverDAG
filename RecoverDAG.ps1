@@ -43,7 +43,7 @@ Param
         [Parameter(Mandatory = $true)]
         [string]$dagName,
         [Parameter(Mandatory = $false)]
-        [string]$mailboxServer,
+        [string]$mailboxServer="",
         [Parameter(Mandatory = $true)]
         [string]$domainController,
         [Parameter(Mandatory = $true)]
@@ -589,6 +589,12 @@ else
     out-logfile -string "Exchange container required to be present in Active Directory and not found." -isError:$true
 }
 
+out-logfile -string "Contruct the backup key."
+
+out-logfile -string $functionActiveDirectoryBackupKey
+$functionActiveDirectoryBackupKeyCN = construct-BackupKey -backupCN $functionActiveDirectoryBackupKey -exchangeCN $functionFullExchangeContainer
+out-logfile -string $functionActiveDirectoryBackupKeyCN 
+
 out-logfile -string "Proceed based on action selected.."
 out-logfile -string $operation
 
@@ -596,9 +602,6 @@ if ($operation -eq $functionBackupOperation)
 {
     out-logfile -string "Entering backup procedure."
     out-logfile -string "Determine if backup Active Directory Key exists."
-    out-logfile -string $functionActiveDirectoryBackupKey
-    $functionActiveDirectoryBackupKeyCN = construct-BackupKey -backupCN $functionActiveDirectoryBackupKey -exchangeCN $functionFullExchangeContainer
-    out-logfile -string $functionActiveDirectoryBackupKeyCN 
 
     if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController)
     {
@@ -625,4 +628,8 @@ if ($operation -eq $functionBackupOperation)
 else 
 {
     out-logfile -string "Entering restore procedure"
+
+    #Test for the presence of the backup key.  If this is not present this is a hard failure.
+
+
 }
