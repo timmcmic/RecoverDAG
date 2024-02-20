@@ -640,4 +640,10 @@ else
         out-logfile -string "Restoration is not possible - the backup key cannot be located in Active Directory."
         exit
     }
+
+    #Obtain the backup information from the directory for parsing and processing.
+
+    $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN -domainController $domainController
+
+    out-logfile -string $functionBackupObject
 }
