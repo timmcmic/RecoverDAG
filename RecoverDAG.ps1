@@ -556,6 +556,59 @@ Function set-BackupInfo
 #=============================================================================================================
 #=============================================================================================================
 
+Function restore-BackupInfo
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $backupInfo,
+        [Parameter(Mandatory = $true)]
+        $domainController,
+        [Parameter(Mandatory = $true)]
+        $mailboxServer
+    )
+
+    $functionDatabaseCopyMap = 
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering restore-BackupInfo"
+    out-logfile -string "************************************************************************"
+
+    try {
+        Set-ADObject -identity $objectDN -clear 'msds-Settings' -server $domainController -errorAction STOP
+    }
+    catch {
+        out-logfile -string "Error clearing previous backup properties."
+        out-logfile -string $_
+        exit
+    }
+
+
+    foreach ($database in $backupInfo)
+    {
+        $functionJson = ConvertTo-Json -InputObject $database
+        out-logfile -string $functionJSON
+        $functionJSON = $functionJSON.tostring()
+        out-logfile -string $functionJSON
+
+        try{
+            set-adobject -identity $objectDN -add @{'msds-settings'=$functionJSON} -server $domainController -errorAction STOP
+        }
+        catch {
+            out-logfile -string "Unable to update backup information."
+            out-logfile -string $_
+        }
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting restore-BackupInfo"
+    out-logfile -string "************************************************************************"
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -647,5 +700,5 @@ else
 
     out-logfile -string $functionBackupObject
 
-
+    restore-BackupInfo -backupInfo $functionBackupObject -domainController $domainController -mailboxServer $mailboxServer
 }
