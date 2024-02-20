@@ -616,8 +616,11 @@ Function restore-BackupInfo
             $functionServerHealthStatus = test-ServiceHealth -server $server.MailboxServer -errorAction STOP
         }
         catch {
-            out-logfile $_
-            $functionServerHealthErrors += $server.MailboxServer
+            $functionObject = New-Object PSObject -Property @{
+                MailboxServer = $server.MailboxServer
+                Error = $_
+            }
+            $functionServerHealthErrors += $functionObject
         }
     }
 
@@ -627,10 +630,20 @@ Function restore-BackupInfo
     {
         foreach ($server in $functionServerHealthErrors)
         {
-            out-logfile -string ("Server health check failed on the following server: "+$server)
+            out-logfile -string ("Server health check failed on the following server: "+$server.mailboxServer)
+            out-logfile -string $server.Error
             out-logfile -string "All members of the database availability group must be accessible."
             exit
         }
+    }
+
+    out-logfile -string "Review all service health status - fail if any services not ready."
+
+    $functionServerHealthErrors = @()
+
+    foreach ($server in $functionServerHealthStatus)
+    {
+        
     }
 
     out-logfile -string "************************************************************************"
