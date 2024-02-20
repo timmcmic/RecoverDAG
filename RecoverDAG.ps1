@@ -57,6 +57,7 @@ $functionExchangeContainer = "CN=Microsoft Exchange"
 $functionFullExchangeContainer = ""
 $functionActiveDirectoryBackupKey = "CN="+ $DAGName + "-Backup,"
 $functionActiveDirectoryBackupKeyCN = ""
+$functionBackupObject = ""
 
 #=============================================================================================================
 #=============================================================================================================
@@ -280,6 +281,38 @@ Function test-ADObject
 #=============================================================================================================
 #=============================================================================================================
 
+Function return-ADObject
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $objectDN
+    )
+
+    $functionReturn = $null
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering return-ADObject"
+    out-logfile -string "************************************************************************"
+
+    try {
+        $functionReturn = get-abobject -identity $objectDN -errorAction STOP
+    }
+    catch {
+        out-logfile -string "AD Object not located by DN."
+        out-logfile -string $_ -isError:$TRUE
+    }
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting return-ADObject"
+    out-logfile -string "************************************************************************"
+
+    return $functionReturn
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -327,6 +360,12 @@ if ($operation -eq $functionBackupOperation)
     if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
     {
         out-logfile -string "The backup key exits for this DAG in Active Directory."
+
+        out-logfile -string "Obtain the backup object."
+
+        $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN
+
+        out-logfile -string $functionBackupObject
     }
     else {
         out-logfile -string "The backup key does not exist for this DAG in Active Directory - operation abort" -isError:$true
