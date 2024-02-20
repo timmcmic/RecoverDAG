@@ -346,6 +346,38 @@ Function create-BackupObject
 #=============================================================================================================
 #=============================================================================================================
 
+Function construct-BackupKey
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $backupCN,
+        [Parameter(Mandatory = $true)]
+        $exchangeCN
+    )
+
+    $functionReturnCN = ""
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering construct-BackupKey"
+    out-logfile -string "************************************************************************"
+
+    $functionReturnCN = "CN="+$backupCN
+    out-logfile -string $FunctionReturnCN
+    $functionReturnCN = ","+$exchangeCN
+    out-logfile -string $functionReturnCN
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting construct-BackupKey"
+    out-logfile -string "************************************************************************"
+
+    return $functionReturnCN
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -387,7 +419,7 @@ if ($operation -eq $functionBackupOperation)
     out-logfile -string "Entering backup procedure."
     out-logfile -string "Determine if backup Active Directory Key exists."
     out-logfile -string $functionActiveDirectoryBackupKey
-    $functionActiveDirectoryBackupKeyCN = $functionActiveDirectoryBackupKey +"," + $functionFullExchangeContainer
+    $functionActiveDirectoryBackupKeyCN = construct-BackupKey -backupCN $functionActiveDirectoryBackupKey + $functionFullExchangeContainer
     out-logfile -string $functionActiveDirectoryBackupKeyCN 
 
     if (test-ADObject -objectDN $functionActiveDirectoryBackupKeyCN)
