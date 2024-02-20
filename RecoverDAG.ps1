@@ -740,6 +740,44 @@ Function restore-BackupInfo
         out-logfile -string "All mailbox database copies accounted for."
     }
 
+    $functionDatabaseCopyErrors = @()
+
+    out-logfile -string "Restore the activation preferences."
+
+    foreach ($database in $functionDatabaseCopyMap)
+    {
+        out-logfile -string ("Processing identity: "+$database.identity)
+
+        try {
+            set-mailboxDatabaseCopy -identity $database.identity -activationPreference $database.ActivationPreference -errorAction STOP -domainController $domainController
+        }
+        catch {
+            $functionObject = New-Object PSObject -Property @{
+                DatabaseCopy = $database.identity
+                ActivationPreference = $database.ActivationPreference
+                Error = $_
+            }
+
+            $functionDatabaseCopyErrors += $functionObject
+        }
+    }
+
+    if ($functionDatabaseCopyErrors.count -gt 0)
+    {
+        out-logfile -string "Setting activation preference for copy failed - retry restoration of manual intervention required."
+
+        foreach ($entry in $functionDatabaseCopyErrors)
+        {
+            out-logfile -string ("DatabaseCopy: "+$entry.DatabaseCopy)
+            out-logfile -string ("ActivationPrefernce: "+$entry.ActivationPreference)
+            out-logfile -string ("Error: "+$entry.Error)
+        }
+    }
+    else 
+    {
+        out-logfile -string "No errors encountered adjusting activation preferences."
+    }
+
     out-logfile -string "************************************************************************"
     out-logfile -string "Exiting restore-BackupInfo"
     out-logfile -string "************************************************************************"
