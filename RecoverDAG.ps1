@@ -442,12 +442,13 @@ Function get-DAGInfo
 
             if ($status.contains($functionReplay))
             {
-                $functionReplayTimeValue = ($status.replace($functionReplayName,"")).trim()
+                $functionReplayTimeValue = $status.tostring()
+                $functionReplayTimeValue = $functionReplayTimeValue.replace($functionReplay,"")
                 out-logfile -string $functionReplayTimeValue
             }
             elseif ($status.contains($functionMaxTime))
             {
-                $functionMaxTimeValue = ($status.replace($functionMaxTime,"")).trim()
+                $functionMaxTimeValue = $status.trim()
                 out-logfile -string $functionMaxTimeValue
             }
             else 
