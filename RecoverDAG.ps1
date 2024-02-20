@@ -394,6 +394,7 @@ Function get-DAGInfo
     $functionMaxTime = "MaxTime"
     $functionMaxTimeValue = $null
     $functionReplayTimeValue = $null
+    $functionReplayStatus = $null
 
     out-logfile -string "************************************************************************"
     out-logfile -string "Entering get-DAGInfo"
@@ -425,10 +426,12 @@ Function get-DAGInfo
 
         foreach ($database in $functionDatabaseCopyStatus)
         {
-            $replayStatus = $database.ReplayLagStatus.split(";")
+            $functionReplayStatus = $database.ReplayLagStatus.split(";")
+            out-logfile -string $functionReplayStatus
 
             foreach ($status in $replayStatus)
             {
+                out-logfile -string $status
                 if ($status.contains($functionReplay))
                 {
                     $functionReplayTimeValue = $status
