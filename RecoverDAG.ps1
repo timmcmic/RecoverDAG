@@ -425,7 +425,7 @@ Function get-DAGInfo
     out-logfile -string "Exiting get-DAGInfo"
     out-logfile -string "************************************************************************"
 
-    return $functionReturnCN
+    return $functionReturn
 }
 
 #=============================================================================================================
@@ -493,7 +493,7 @@ if ($operation -eq $functionBackupOperation)
 
     out-logfile -string "Obtain the database copy information for the DAG and persist required information."
 
-
+    get-DAGInfo
 }
 else 
 {
