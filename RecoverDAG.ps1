@@ -321,7 +321,7 @@ Function create-BackupObject
         [Parameter(Mandatory = $true)]
         $objectName,
         [Parameter(Mandatory = $true)]
-        $objectDN,
+        $objectDN
     )
 
     $functionObjectType = "msDS-App-Configuration"
