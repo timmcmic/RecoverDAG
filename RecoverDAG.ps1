@@ -512,7 +512,8 @@ Function set-BackupInfo
         exit
     }
 
-    out-logfile -string $backupInfo[0].tostring()
+    $test = ConvertTo-Csv $backupInfo[0]
+    $test
 
     foreach ($database in $backupInfo)
     {
