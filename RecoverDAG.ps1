@@ -512,7 +512,7 @@ Function set-BackupInfo
         exit
     }
 
-    $test = ConvertTo-Csv $backupInfo[0]
+    $test = ConvertTo-Csv $backupInfo[0] -NoTypeInformation
     $test
 
     foreach ($database in $backupInfo)
