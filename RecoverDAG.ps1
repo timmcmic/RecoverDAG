@@ -378,6 +378,59 @@ Function construct-BackupKey
 #=============================================================================================================
 #=============================================================================================================
 
+Function get-DAGInfo
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        $dagName
+    )
+
+    $functionReturn
+    $functionDatabaseCopyStatus = ""
+    $functionServers = ""
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering get-DAGInfo"
+    out-logfile -string "************************************************************************"
+
+    out-logfile -string "Obtaining database copy stauts."
+
+    try {
+        $functionServers = (Get-databaseAvailabilityGroup -identity $DAGName -errorAction STOP).servers
+
+        out-logfile -string $functionServers
+
+        foreach ($server in $FunctionServers)
+        {
+            out-logfile -string ("Processing server: "+$server)
+            try {
+                $functionDatabaseCopyStatus += get-mailboxDatabaseCopyStatus -server $server -errorAction STOP
+            }
+            catch {
+                out-logfile -string "Unable to obtain database copy status for server."
+                out-logfile -string $_
+                exit
+            }
+        }
+    }
+    catch {
+        out-logfile -string "Uanble to obtain database availability group servers."
+        out-logfile -string $_
+        exit
+    }
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting get-DAGInfo"
+    out-logfile -string "************************************************************************"
+
+    return $functionReturnCN
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -437,6 +490,10 @@ if ($operation -eq $functionBackupOperation)
     $functionBackupObject = return-ADObject -objectDN $functionActiveDirectoryBackupKeyCN
 
     out-logfile -string $functionBackupObject
+
+    out-logfile -string "Obtain the database copy information for the DAG and persist required information."
+
+
 }
 else 
 {
