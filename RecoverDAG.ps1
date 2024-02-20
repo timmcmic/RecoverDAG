@@ -52,6 +52,9 @@ Param
 $functionBackupOperation = "Backup"
 $functionRestoreOperation = "Restore"
 $functionADConfigurationContext = ""
+$functionServicesContainer = "CN=Services"
+$functionExchangeContainer = "CN=Microsoft Exchange"
+$functionFullExchangeContainer = ""
 
 #=============================================================================================================
 #=============================================================================================================
@@ -206,6 +209,40 @@ Function get-ADConfigurationNamingContext
 #=============================================================================================================
 #=============================================================================================================
 
+Function construct-FullExchangeContainer
+{ 
+    # Specifies a path to one or more locations. Wildcards are permitted.
+    Params
+    (
+        [Parameter(Mandatory = $true)]
+        $servicesCN,
+        [Parameter(Mandatory = $true)]
+        $exchangeCN,
+        [Parameter(Mandatory = $true)]
+        $configurationCN
+    )
+
+    $functionReturnCN = ""
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Entering construct-FullExchangeContainer"
+    out-logfile -string "************************************************************************"
+
+    $functionReturnCN = $exchangeCN+","+$servicesCN
+    out-logfile -string $functionReturnCN
+    $functionReturnCN = $functionReturnCN + "," + $configurationCN
+    out-logfile -string $functionReturnCN
+
+    out-logfile -string "************************************************************************"
+    out-logfile -string "Exiting construct-FullExchangeContainer"
+    out-logfile -string "************************************************************************"
+
+    return $functionReturnCN
+}
+
+#=============================================================================================================
+#=============================================================================================================
+
 #Start the log file based on DAG name.
 
 new-logfile -logFileName $dagName -logFolderPath $logFolderPath
@@ -229,6 +266,12 @@ if ($operation -eq $functionBackupOperation)
     $functionADConfigurationContext = get-ADConfigurationNamingContext
 
     out-logfile -string $functionADConfigurationContext 
+
+    out-logfile -string "Construct the full Exchange container."
+
+    $functionFullExchangeContainer = construct-FullExchangeContainer -servicesCN $functionServicesContainer -exchangeCN $functionExchangeContainer -configurationCN $functionADConfigurationContext 
+
+    out-logfile -string $functionFullExchangeContainer 
 }
 else 
 {
