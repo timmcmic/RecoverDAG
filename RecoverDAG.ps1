@@ -614,7 +614,7 @@ Function restore-BackupInfo
         out-logfile -string "Perform a test server health on all mailbox servers."
 
         try {
-            $functionServerHealthStatus += test-ServiceHealth -server $server.MailboxServer -errorAction STOP
+            $functionServerHealthStatus = test-ServiceHealth -server $server.MailboxServer -errorAction STOP
 
             $functionObject = New-Object PSObject -Property @{
                 MailboxServer = $server.MailboxServer
