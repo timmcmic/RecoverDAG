@@ -435,29 +435,39 @@ Function get-DAGInfo
     {
         $functionReplayStatus = $database.ReplayLagStatus.split(";")
         out-logfile -string $functionReplayStatus
+
+        foreach ($status in $functionReplayStatus)
+        {
+            out-logfile -string $status
+
+            if ($status.contains($functionReplay))
+            {
+                $functionReplayTimeValue = $status
+                out-logfile -string $functionReplayTimeValue
+            }
+            elseif ($status.contains($functionMaxTime))
+            {
+                $functionMaxTimeValue = $status
+                out-logfile -string $functionMaxTimeValue
+            }
+            else 
+            {
+                out-logfile -string "Nothing to see here - move on..."
+            }
+        }
+
+        $functionObject = New-Object PSObject -Property @{
+            Identity = $database.Identity
+            MailboxServer = $database.MailboxServer
+            ActivationPreference = $database.ActivationPreference
+            ReplayLagTime = $functionReplayTimeValue
+            MaxLagTime = $functionMaxTimeValue
+        }
+    
+        out-logfile -string $functionObject
     }
 
-    foreach ($status in $functionReplayStatus)
-    {
-        out-logfile -string $status
-
-        if ($status.contains($functionReplay))
-        {
-            $functionReplayTimeValue = $status
-            out-logfile -string $functionReplayTimeValue
-        }
-        elseif ($status.contains($functionMaxTime))
-        {
-            $functionMaxTimeValue = $status
-            out-logfile -string $functionMaxTimeValue
-        }
-        else 
-        {
-            out-logfile -string "Nothing to see here - move on..."
-        }
-    }
-
-
+    
     <#
 
     try {
